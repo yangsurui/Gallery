@@ -42,7 +42,7 @@ class GalleryStage extends React.Component {
      * |         |-------------|          |
      * |         |  controller |          |
      *
-     * 确定取值范围 => 确定极限值
+     * 确定取值范围即确定极限值
      *
      */
 
