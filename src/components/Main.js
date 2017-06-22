@@ -15,6 +15,9 @@ let imgData = require('../data/imgDatas.json');
   return imgDataArr;
 })(imgData);
 
+//在给定区间随机生成一个数值
+let getRandomNum = (min, max) => Math.ceil(Math.random()*(max-min)+min);
+
 class ImgFigure extends React.Component {
   render() {
     return(
@@ -33,36 +36,103 @@ class GalleryStage extends React.Component {
     super(props);
 
     /*
-     * 初始化imgFigure的排布范围
+     * 将整个舞台分为四个区域
      *
-     * 将整个舞台分为四个部分
      * |         |             |          |
-     * |         |  centerPos  |          |
-     * | leftSec |             | rightSec |
+     * |         |    upSec    |          |
+     * |         |             |          |
+     * | leftSec |-------------| rightSec |
+     * |         | |centerImg| |          |
      * |         |-------------|          |
      * |         |  controller |          |
+     * |         |             |          |
      *
      * 确定取值范围即确定极限值
+     * 中心区域只有一张图片
      *
      */
 
+    //初始化imgFigure的排布范围
     this.constant = {
       centerPos:{
         left: 0,
         right: 0
       },
       hPosRange:{
-        leftSecX:[0,0],
-        rightSecX:[0,0]
+        leftSec: [0,0],
+        rightSec: [0,0],
+        topSec: 0
       },
       vPosRange:{
-        x:[0,0],
-        topY:[0,0]
+        leftSec: [0,0], //rightSecY的范围与leftSecY相同
+        topSec: [0,0],
       }
+    };
+
+    /**
+     * 重新进行imgFigure的排布
+     * @param centerIndex 中心区域图片的索引
+     */
+    this.rearrange = (centerIndex)=>{
+      let imgStateArr = this.state.imgStateArr,
+        constant = this.constant,
+        centerPos = constant.centerPos,
+        hPosRange = constant.hPosRange,
+        vPosRange = constant.vPosRange,
+
+        hPosRangeLeftSec = hPosRange.leftSec,
+        hPosRangeRightSec = hPosRange.rightSec,
+        hPosTopSec = hPosRange.topSec,
+
+        vPosRangeLeftSec = vPosRange.leftSec,
+        vPosRangeRightSec = vPosRange.leftSec,
+        vPosRangeTopSec = vPosRange.topSec,
+
+        imgTopInfoArr = [], //声明用于存储上区图片信息的数组对象
+        imgTopNum = Math.ceil(Math.random()*2), //上区图片数量取值为0或1
+        imgTopIndex = 0, //初始化上区图片的索引值
+
+        //声明数组对象用于存储中心图片信息
+        imgCenterInfoArr = imgStateArr.splice(centerIndex,1);
+
+      //居中索引为centerIndex的图片
+      imgCenterInfoArr[0].pos = centerPos;
+
+      //取出要排布在上区的图片状态信息
+      imgTopIndex = Math.ceil(Math.random()*(imgStateArr.length - imgTopNum));
+      imgTopInfoArr = imgStateArr.splice(imgTopIndex,imgTopNum);
+
+      //排布位于上区的图片
+      imgTopInfoArr.forEach((value,index)=>{
+        imgTopInfoArr[index].pos = {
+          left: hPosTopSec,
+          top: getRandomNum(vPosRangeTopSec[0],vPosRangeTopSec[1])
+        }
+      });
+
+
+
+
+    };
+
+    this.state = {
+
+      //创建数组用于存储图片状态
+      imgStateArr:[
+        {
+          pos:{
+            left: '0',
+            top: '0'
+          }
+        }
+      ]
     }
+
   }
 
+  //组件加载后，计算每张图片的位置范围
   componentDidMount(){
+
     //获取舞台的宽度和高度
     let stageDOM = React.findDOMNode(this.refs.stage),
       stageWidth = stageDOM.scrollWidth,
@@ -77,26 +147,53 @@ class GalleryStage extends React.Component {
       halfImgWidth = Math.ceil(imgWidth / 2),
       halfImgHeight = Math.ceil(imgHeight / 2);
 
+    //确定中心区域图片的位置
     this.constant.centerPos = {
       left: halfStageWidth - halfImgWidth,
       top: halfStageHeight - halfImgHeight
     };
-    this.constant.hPosRange.leftSecX[0]= 0;
 
+    //确定水平方向左区的排布范围
+    this.constant.hPosRange.leftSec[0]= -halfImgWidth;
+    this.constant.hPosRange.leftSec[1]= halfStageWidth - 3 * halfImgWidth;
+    //确定水平方向右区的排布范围
+    this.constant.hPosRange.rightSec[0] = halfStageWidth + halfImgWidth;
+    this.constant.hPosRange.rightSec[1] = stageWidth - halfImgWidth;
+    //计算水平方向上区的图片的位置
+    this.constant.hPosRange.topSec = halfStageWidth - halfImgWidth;
 
+    //确定垂直方向左区、右区的排布范围
+    this.constant.vPosRange.leftSec[0] = -halfImgHeight;
+    this.constant.vPosRange.leftSec[1] = stageHeight - halfImgHeight;
+    //确定垂直方向上区的排布
+    this.constant.vPosRange.topSec[0] = -halfImgHeight;
+    this.constant.vPosRange.topSec[1] = halfStageHeight - 3 * halfImgHeight;
+
+    this.rearrange(0);
   }
 
 
   render(){
     let controllerUnits =[],
       imgFigures =[];
-    /*
+
+    /**
      * @param value 包含图片信息的对象
      * @param index 图片在数组中的位置，方便后续定位
      */
     imgData.forEach((value,index) => {
+
+      //初始化状态对象
+      if(!this.state.imgStateArr[index]){
+        this.state.imgStateArr[index] = {
+          pos:{
+            left: 0,
+            top: 0
+          }
+        }
+      }
       imgFigures.push(<ImgFigure data={value} ref={'imgFigure'+index}/>);
-    });
+    }) ;
 
     return (
       <section className="stage" ref="stage">
