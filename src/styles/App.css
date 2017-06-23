@@ -6,26 +6,38 @@ html,body {
   background-color: #222;
 }
 
-.content{
-  width: 100%;
-  height: 100%;
-}
-
 .stage{
   position: relative;
 
   width: 100%;
-  height: 680px;
+  height: 800px;
 }
 
 .img-sec{
   position: relative;
-
   width: 100%;
   height: 100%;
-
   overflow: hidden;
   background-color: #ddd;
+}
+
+.img-figure {
+  position: absolute;
+  width: 280px;
+  height: 310px;
+  margin: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+.img-figure img{
+  width: 100%;
+}
+figcaption{
+  margin: 10px 0;
+
+
+  text-align: center;
 }
 
 .controller-nav{
@@ -38,3 +50,4 @@ html,body {
 
   text-align: center;
 }
+
