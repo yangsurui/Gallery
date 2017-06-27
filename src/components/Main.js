@@ -54,6 +54,7 @@ class ImgFigure extends React.Component {
           <h2 className="img-title"> {this.props.data.title}</h2>
           <div className="img-desc" onClick={this.handleClick}>{this.props.data.desc}</div>
         </figcaption>
+
       </figure>
     )
   }
@@ -165,15 +166,12 @@ class GalleryStage extends React.Component {
         let imgStateArr = this.state.imgStateArr;
         imgStateArr[index].isInverse = !imgStateArr[index].isInverse;
 
+        //触发component的重新渲染
         this.setState({
           imgStateArr: imgStateArr
         });
-
       }
-
-
     }
-
 
     /**
      * 重新进行imgFigure的排布
@@ -203,8 +201,7 @@ class GalleryStage extends React.Component {
       //居中索引为centerIndex的图片
       imgCenterInfoArr[0]={
         pos: centerPos,
-        rotate: 0,
-        isCenter: true
+        rotate: 0
       };
 
       //取出要排布在上区的图片状态信息
@@ -217,8 +214,7 @@ class GalleryStage extends React.Component {
             left: xPosTopSec,
             top: getRandomNum(yPosRangeTopSec[0], yPosRangeTopSec[1])
           },
-          rotate: getRandomDeg(),
-          isCenter: false
+          rotate: getRandomDeg()
         };
       });
 
@@ -235,8 +231,7 @@ class GalleryStage extends React.Component {
             left: getRandomNum(xPosRangeLOrR[0], xPosRangeLOrR[1]),
             top: getRandomNum(yPosRangeLeftSec[0], yPosRangeLeftSec[1])
           },
-          rotate: getRandomDeg(),
-          isCenter: false
+          rotate: getRandomDeg()
         };
         //将原来取出用于上区排布的图片信息放回imgStateArr
         if (imgTopInfoArr && imgTopInfoArr[0]) {
@@ -254,8 +249,8 @@ class GalleryStage extends React.Component {
     }
 
     render(){
-      let controllerUnits = [],
-        imgFigures = [];
+      let imgFigures = [],
+        controllerUnits = [];
 
       /**
        * @param value 包含图片信息的对象
@@ -263,7 +258,7 @@ class GalleryStage extends React.Component {
        */
       imgData.forEach((value, index) => {
 
-        //初始化状态对象
+        //初始化图片信息状态对象
         if (!this.state.imgStateArr[index]) {
           this.state.imgStateArr[index] = {
             pos: {
@@ -271,7 +266,7 @@ class GalleryStage extends React.Component {
               top: 0
             },
             rotate: 0,
-            isInverse: false
+            isInverse: false //正面
           }
         }
         imgFigures.push(
