@@ -29,7 +29,12 @@ class ImgFigure extends React.Component {
   }
 
   handleClick(){
-    this.props.inverse();
+    //通过rearrange对象的isCenter判断此时被点击图片(index)是否居中
+    if(this.props.rearrange.isCenter){
+      this.props.inverse();
+    }else{
+      this.props.center();
+    }
   }
 
   render() {
@@ -47,12 +52,15 @@ class ImgFigure extends React.Component {
     let imgFigureClassName = 'img-figure';
     imgFigureClassName += this.props.rearrange.isInverse ? ' is-inverse' :'';
 
+    let imgDesc = 'img-desc';
+    imgDesc += this.props.rearrange.isInverse ? ' is-inverse' :'';
+
     return(
       <figure className={imgFigureClassName} style={styleObj} onClick={this.handleClick}>
         <img src={this.props.data.imgUrl} alt={this.props.data.title}/>
         <figcaption>
           <h2 className="img-title"> {this.props.data.title}</h2>
-          <div className="img-desc" onClick={this.handleClick}>{this.props.data.desc}</div>
+          <div className={imgDesc} onClick={this.handleClick}>{this.props.data.desc}</div>
         </figcaption>
 
       </figure>
@@ -174,6 +182,17 @@ class GalleryStage extends React.Component {
     }
 
     /**
+     * 当非居中的函数被点击时，通过rearrange函数，居中对应index的图片
+     * @param index
+     * @returns {function()}
+     */
+    center(index){
+        return()=>{
+          this.rearrange(index);
+        }
+    }
+
+    /**
      * 重新进行imgFigure的排布
      * @param centerIndex 中心区域图片的索引
      */
@@ -201,7 +220,8 @@ class GalleryStage extends React.Component {
       //居中索引为centerIndex的图片
       imgCenterInfoArr[0]={
         pos: centerPos,
-        rotate: 0
+        rotate: 0,
+        isCenter: true
       };
 
       //取出要排布在上区的图片状态信息
@@ -214,7 +234,8 @@ class GalleryStage extends React.Component {
             left: xPosTopSec,
             top: getRandomNum(yPosRangeTopSec[0], yPosRangeTopSec[1])
           },
-          rotate: getRandomDeg()
+          rotate: getRandomDeg(),
+          isCenter: false
         };
       });
 
@@ -231,7 +252,8 @@ class GalleryStage extends React.Component {
             left: getRandomNum(xPosRangeLOrR[0], xPosRangeLOrR[1]),
             top: getRandomNum(yPosRangeLeftSec[0], yPosRangeLeftSec[1])
           },
-          rotate: getRandomDeg()
+          rotate: getRandomDeg(),
+          isCenter: false
         };
         //将原来取出用于上区排布的图片信息放回imgStateArr
         if (imgTopInfoArr && imgTopInfoArr[0]) {
@@ -266,7 +288,8 @@ class GalleryStage extends React.Component {
               top: 0
             },
             rotate: 0,
-            isInverse: false //正面
+            isInverse: false, //正面
+            isCenter: false //不居中
           }
         }
         imgFigures.push(
@@ -276,6 +299,7 @@ class GalleryStage extends React.Component {
             ref={'imgFigure' + index}
             rearrange={this.state.imgStateArr[index]}
             inverse={this.inverse(index)} // 调用在父组件中封装好的功能
+            center={this.center(index)}
           />);
       });
 
