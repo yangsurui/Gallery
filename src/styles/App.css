@@ -29,6 +29,7 @@ html,body {
   background-color: #fff;
   cursor: pointer;
   transform-style: preserve-3d;
+  transition: 1s
 }
 .img-figure img{
   width: 100%;

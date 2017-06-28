@@ -42,13 +42,17 @@ class ImgFigure extends React.Component {
     if(this.props.rearrange.pos){
       styleObj= this.props.rearrange.pos;
     }
-
+    if(this.props.rearrange.isCenter){
+      styleObj.zIndex = 101;
+    }
+    
     if(this.props.rearrange.rotate){
       //兼容浏览器
       (['msTransform','MozTransform','WebkitTransform','transform']).forEach((value)=>{
         styleObj[value] = 'rotate('+this.props.rearrange.rotate+'deg)';
       })
     }
+
     let imgFigureClassName = 'img-figure';
     imgFigureClassName += this.props.rearrange.isInverse ? ' is-inverse' :'';
 
