@@ -45,7 +45,7 @@ class ImgFigure extends React.Component {
     if(this.props.rearrange.isCenter){
       styleObj.zIndex = 101;
     }
-    
+
     if(this.props.rearrange.rotate){
       //兼容浏览器
       (['msTransform','MozTransform','WebkitTransform','transform']).forEach((value)=>{
@@ -215,7 +215,7 @@ class GalleryStage extends React.Component {
         yPosRangeTopSec = yPosRange.topSec,
 
         imgTopInfoArr = [], //声明用于存储上区图片信息的数组对象
-        imgTopNum = Math.ceil(Math.random() * 2), //上区图片数量取值为0或1
+        imgTopNum = Math.random() > 0.5 ? 0 : 1, //上区图片数量取值为0或1
         imgTopIndex = 0, //初始化上区图片的索引值
 
         //声明数组对象用于存储中心图片信息
