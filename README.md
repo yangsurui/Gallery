@@ -11,5 +11,11 @@
 
 『Problem』虽然上一次提交使img-desc元素出现在了网页中，但通过chrome的检查功能发现页面并未显示img-figure元素，同时"transform: rotate(180deg)"这条属性只应用在了img-figure元素上，所以在背面点击的时候会没有反应。
 
-『Solution』类似对img-figure，利用条件运算符给img-desc添加is-inverse，但操作起来不是很流畅，有的时候点击背面会没有反应
+『Solution』类似对img-figure，利用条件运算符给img-desc添加is-inverse，但操作起来不是很流畅，**有的时候点击背面会没有反应(待优化)**
 
+## Problem3(待解决)
+
+imgFigure15的位置、角度不会随机变化
+
+##Problem4(待解决)
+imgFigure和controllerUnits的翻转动画不够立体
