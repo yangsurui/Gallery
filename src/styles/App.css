@@ -1,4 +1,11 @@
-/* Base Application Styles */
+@font-face {
+  font-family: 'icon-font';
+  src: url('../fonts/icons/turn-arrow.svg') format('svg'),
+  url('../fonts/icons/turn-arrow.ttf') format('truetype'),
+  url('../fonts/icons/turn-arrow.eot') format('embedded'),
+  url('../fonts/icons/turn-arrow.woff') format('woff');
+}
+
 html,body {
   width: 100%;
   height: 100%;
@@ -9,7 +16,7 @@ html,body {
 .stage{
   position: relative;
   width: 100%;
-  height: 800px;
+  height: 680px;
 }
 
 .img-sec{
@@ -63,13 +70,35 @@ figcaption{
 .controller-nav{
   position: absolute;
   left: 0;
-  bottom: 30px;
+  bottom: 50px;
   z-index: 101;
-
   width: 100%;
-
   text-align: center;
+
 }
+.controller-unit{
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: 0 5px;
+  background-color: #aaa;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+  transform: scale(0.6);
+  transition: 1s ease-in-out;
+}
+.controller-unit::after{
+  content: '\e600';
+  font-family: icon-font;
+  color: #fff;
+  line-height: 30px;
+}
+.controller-is-inverse{
+  transform: rotateY(180deg) scale(0.6);
+  transition: 1s ease-in-out;
+}
+
 .is-inverse{
   transform: rotateY(180deg);
 }

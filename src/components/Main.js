@@ -72,6 +72,27 @@ class ImgFigure extends React.Component {
   }
 }
 
+class ControllerUnits extends React.Component {
+  constructor(props){
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick(){
+    if(this.props.rearrange.isCenter){
+      this.props.inverse();
+    }else{
+      this.props.center();
+    }
+  }
+  render(){
+    let controllerUnitsClassName = 'controller-unit';
+    controllerUnitsClassName += this.props.rearrange.isInverse ? ' controller-is-inverse' : '';
+    return(
+      <span className={controllerUnitsClassName} onClick={this.handleClick}></span>
+    )
+  }
+}
+
 class GalleryStage extends React.Component {
     constructor(props) {
       super(props);
@@ -304,8 +325,18 @@ class GalleryStage extends React.Component {
             rearrange={this.state.imgStateArr[index]}
             inverse={this.inverse(index)} // 调用在父组件中封装好的功能
             center={this.center(index)}
-          />);
+          />
+        );
+        controllerUnits.push(
+          <ControllerUnits
+            key={index}
+            rearrange={this.state.imgStateArr[index]}
+            inverse={this.inverse(index)}
+            center={this.center(index)}
+          />
+        );
       });
+
 
       return (
         <section className="stage" ref="stage">
