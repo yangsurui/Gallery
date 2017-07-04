@@ -22,7 +22,7 @@ let imgData = require('../data/imgDatas.json');
 let getRandomNum = (min, max) => Math.ceil(Math.random()*(max-min)+min);
 
 //随机生成-30到30区间的一个数值
-let getRandomDeg =()=> (Math.random() > 0.5 ? '' : '-') + Math.ceil(Math.random()*30);
+let getRandomDeg = () => (Math.random() > 0.5 ? '' : '-') + Math.ceil(Math.random()*30);
 
 class GalleryStage extends React.Component {
     constructor(props) {
@@ -54,7 +54,7 @@ class GalleryStage extends React.Component {
         xPosRange: {
           leftSec: [0, 0],
           rightSec: [0, 0],
-          topSec: 0
+          topSec: [0,0]
         },
         yPosRange: {
           leftSec: [0, 0], //rightSecY的范围与leftSecY相同
@@ -86,15 +86,15 @@ class GalleryStage extends React.Component {
       let stageDOM = ReactDOM.findDOMNode(this.refs.stage),
         stageWidth = stageDOM.scrollWidth,
         stageHeight = stageDOM.scrollHeight,
-        halfStageWidth = Math.ceil(stageWidth / 2),
-        halfStageHeight = Math.ceil(stageHeight / 2);
+        halfStageWidth = Math.floor(stageWidth / 2),
+        halfStageHeight = Math.floor(stageHeight / 2);
 
       //获取imgFigure的宽度和高度
       let imgFigureDOM = ReactDOM.findDOMNode(this.refs.imgFigure0),
         imgWidth = imgFigureDOM.scrollWidth,
         imgHeight = imgFigureDOM.scrollHeight,
-        halfImgWidth = Math.ceil(imgWidth / 2),
-        halfImgHeight = Math.ceil(imgHeight / 2);
+        halfImgWidth = Math.floor(imgWidth / 2),
+        halfImgHeight = Math.floor(imgHeight / 2);
 
       //确定中心区域图片的位置
       this.constant.centerPos = {
@@ -109,7 +109,8 @@ class GalleryStage extends React.Component {
       this.constant.xPosRange.rightSec[0] = halfStageWidth + halfImgWidth;
       this.constant.xPosRange.rightSec[1] = stageWidth - halfImgWidth;
       //计算水平方向上区的图片的位置
-      this.constant.xPosRange.topSec = halfStageWidth - halfImgWidth;
+      this.constant.xPosRange.topSec[0] = halfStageWidth - halfImgWidth;
+      this.constant.xPosRange.topSec[1] = halfStageWidth;
 
       //确定垂直方向左区、右区的排布范围
       this.constant.yPosRange.leftSec[0] = -halfImgHeight;
@@ -167,11 +168,11 @@ class GalleryStage extends React.Component {
         yPosRangeTopSec = yPosRange.topSec,
 
         imgTopInfoArr = [], //声明用于存储上区图片信息的数组对象
-        imgTopNum = Math.random() > 0.5 ? 0 : 1, //上区图片数量取值为0或1
+        imgTopNum = Math.floor(Math.random()*2), //上区图片数量取值为0或1
         imgTopIndex = 0, //初始化上区图片的索引值
 
         //声明数组对象用于存储中心图片信息
-        imgCenterInfoArr = imgStateArr.splice(centerIndex, 1);
+        imgCenterInfoArr = imgStateArr[centerIndex];
 
       //居中索引为centerIndex的图片
       imgCenterInfoArr[0]={
@@ -187,7 +188,7 @@ class GalleryStage extends React.Component {
       imgTopInfoArr.forEach((value, index)=> {
         imgTopInfoArr[index] = {
           pos: {
-            left: xPosTopSec,
+            left: getRandomNum(xPosTopSec[0],xPosTopSec[1]),
             top: getRandomNum(yPosRangeTopSec[0], yPosRangeTopSec[1])
           },
           rotate: getRandomDeg(),
@@ -211,6 +212,7 @@ class GalleryStage extends React.Component {
           rotate: getRandomDeg(),
           isCenter: false
         };
+
         //将原来取出用于上区排布的图片信息放回imgStateArr
         if (imgTopInfoArr && imgTopInfoArr[0]) {
           imgStateArr.splice(imgTopIndex, 1, imgTopInfoArr[0]);
@@ -222,7 +224,7 @@ class GalleryStage extends React.Component {
         //触发component的重新渲染
         this.setState({
           imgStateArr: imgStateArr
-        });
+        })
       }
     }
 
