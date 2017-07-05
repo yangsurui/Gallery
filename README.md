@@ -18,6 +18,13 @@
 
 利用事件冒泡，传递event参数
 
+```
+handleClick(e){
+	event.stopPropagation();
+	event.preventDefault();
+}
+```
+
 
 ## Problem3(待解决)
 
