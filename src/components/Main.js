@@ -283,7 +283,4 @@ class GalleryStage extends React.Component {
       )
     }
   }
-
-GalleryStage.defaultProps = {};
-
 export default GalleryStage;
